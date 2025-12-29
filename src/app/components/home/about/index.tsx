@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 
 /* -------------------------------------------------------
-   EASING (typed — fixes TS issues)
+   EASING
 ------------------------------------------------------- */
 const easeEditorial: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -39,29 +39,37 @@ const charVariant: Variants = {
 };
 
 /* -------------------------------------------------------
-   TEXT SPLITTER
+   WORD-SAFE TEXT SPLITTER (NO MID-WORD BREAKS)
 ------------------------------------------------------- */
 const splitText = (text: string) =>
-  text.split("").map((char, index) => (
+  text.split(" ").map((word, wordIndex) => (
     <motion.span
-      key={index}
-      variants={charVariant}
-      className="inline-block"
+      key={wordIndex}
+      variants={container}
+      className="inline-flex whitespace-nowrap"
     >
-      {char === " " ? "\u00A0" : char}
+      {word.split("").map((char, charIndex) => (
+        <motion.span
+          key={charIndex}
+          variants={charVariant}
+          className="inline-block"
+        >
+          {char}
+        </motion.span>
+      ))}
+      {/* Space between words */}
+      <span className="inline-block">&nbsp;</span>
     </motion.span>
   ));
 
 export default function DesignedPhilosophy() {
   return (
     <section className="relative py-32 md:py-40 bg-black overflow-hidden">
-
       {/* Editorial Divider */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[1px] w-[65%] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
       <div className="relative z-10 container mx-auto px-6 lg:max-w-screen-xl">
         <div className="grid lg:grid-cols-12 gap-16 items-start">
-
           {/* LEFT AXIS LABEL */}
           <motion.div
             className="lg:col-span-3"
@@ -70,9 +78,9 @@ export default function DesignedPhilosophy() {
             viewport={{ once: true, margin: "-120px" }}
             variants={container}
           >
-            <span className="block text-[11px] tracking-[0.45em] uppercase text-white/40">
+            <motion.span className="block text-[11px] tracking-[0.45em] uppercase text-white/40">
               {splitText("DESIGNED")}
-            </span>
+            </motion.span>
           </motion.div>
 
           {/* EDITORIAL BODY */}
@@ -83,11 +91,11 @@ export default function DesignedPhilosophy() {
             viewport={{ once: true, margin: "-120px" }}
             variants={container}
           >
-            {/* HEADLINE — SINGLE LINE */}
-            <h2 className="text-white font-light leading-tight text-3xl md:text-5xl whitespace-nowrap">
-              <motion.div variants={container}>
+            {/* HEADLINE */}
+            <h2 className="text-white font-light leading-tight text-3xl md:text-5xl whitespace-normal md:whitespace-nowrap">
+              <motion.span variants={container}>
                 {splitText("Experience. Excellence. Expertise.")}
-              </motion.div>
+              </motion.span>
             </h2>
 
             {/* INTRO COPY */}
@@ -134,7 +142,6 @@ export default function DesignedPhilosophy() {
                 />
               </a>
             </motion.div>
-
           </motion.div>
         </div>
       </div>

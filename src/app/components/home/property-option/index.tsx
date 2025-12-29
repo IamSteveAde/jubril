@@ -3,7 +3,7 @@
 import { motion, Variants } from "framer-motion";
 
 /* -------------------------------------------------------
-   EASING (typed — safe for TS)
+   EASING
 ------------------------------------------------------- */
 const easeEditorial: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -38,23 +38,32 @@ const charVariant: Variants = {
 };
 
 /* -------------------------------------------------------
-   TEXT SPLITTER
+   WORD-SAFE TEXT SPLITTER (CRITICAL FIX)
 ------------------------------------------------------- */
 const splitText = (text: string) =>
-  text.split("").map((char, index) => (
+  text.split(" ").map((word, wordIndex) => (
     <motion.span
-      key={index}
-      variants={charVariant}
-      className="inline-block"
+      key={wordIndex}
+      variants={container}
+      className="inline-flex whitespace-nowrap"
     >
-      {char === " " ? "\u00A0" : char}
+      {word.split("").map((char, charIndex) => (
+        <motion.span
+          key={charIndex}
+          variants={charVariant}
+          className="inline-block"
+        >
+          {char}
+        </motion.span>
+      ))}
+      {/* Space between words */}
+      <span className="inline-block">&nbsp;</span>
     </motion.span>
   ));
 
 export default function Philosophy() {
   return (
     <section className="relative py-36 md:py-44 overflow-hidden bg-[#f3f4f6]">
-
       {/* Platinum Grain */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="platinum-grain opacity-[0.45]" />
@@ -66,7 +75,6 @@ export default function Philosophy() {
 
       <div className="relative z-10 container mx-auto px-6 lg:max-w-screen-xl">
         <div className="grid lg:grid-cols-12 gap-16 items-start">
-
           {/* LEFT AXIS LABEL */}
           <motion.div
             className="lg:col-span-3"
@@ -75,9 +83,12 @@ export default function Philosophy() {
             viewport={{ once: true, margin: "-120px" }}
             variants={container}
           >
-            <span className="block text-[11px] tracking-[0.45em] uppercase text-black/50">
+            <motion.span
+              variants={container}
+              className="block text-[11px] tracking-[0.45em] uppercase text-black/50"
+            >
               {splitText("Philosophy")}
-            </span>
+            </motion.span>
           </motion.div>
 
           {/* EDITORIAL BODY */}
@@ -130,7 +141,6 @@ export default function Philosophy() {
             >
               DESIGNED exists to document this difference.
             </motion.p>
-
           </motion.div>
         </div>
       </div>
@@ -142,7 +152,7 @@ export default function Philosophy() {
           width: 200%;
           height: 200%;
           background: radial-gradient(
-            rgba(0,0,0,0.08) 1px,
+            rgba(0, 0, 0, 0.08) 1px,
             transparent 1px
           );
           background-size: 3px 3px;
@@ -150,11 +160,14 @@ export default function Philosophy() {
         }
 
         @keyframes moveGrain {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(-12%, -12%); }
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(-12%, -12%);
+          }
         }
       `}</style>
-
     </section>
   );
 }
