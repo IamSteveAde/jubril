@@ -12,7 +12,7 @@ import Enquire from "./components/home/enquiries";
 
 
 // Global components
-import AudioWelcome from "./components/AudioWelcome";
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://digitalinclusioninitiative.org"),
@@ -78,7 +78,7 @@ export default function Home() {
   return (
     <main>
       {/* Audio welcome — plays once per visit */}
-      <AudioWelcome />
+   
 
       {/* Core sections */}
       <Hero />
